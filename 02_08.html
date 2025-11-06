@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>02월 08일 · 선교 카페 명단</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* 중앙 배치 & 박스 모델 안정화 */
+      * { box-sizing: border-box; }
+      body {
+        min-height: 100svh;
+        display: grid;
+        place-content: center;
+        margin: 0;
+      }
+      .sheet {
+        display: grid;
+        gap: 18px;
+        text-align: center;
+        padding: 8px;
+      }
+
+      /* 제목 */
+      .title-top {
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        font-size: clamp(28px, 5vw, 44px);
+      }
+      .title-sub {
+        font-weight: 700;
+        color: #475569;
+        font-size: clamp(18px, 3.5vw, 28px);
+        margin-top: -6px;
+      }
+
+      /* ✅ 표: 3열 고정 + 화면폭에 맞춤(가로스크롤 X) */
+      table.roster {
+        border-collapse: collapse;
+        margin-inline: auto;
+        border: 1px solid #e2e8f0;
+        table-layout: fixed;             /* 셀 너비를 균등 분배 */
+        width: min(720px, 94vw);         /* 데스크톱 720px, 모바일은 화면폭에 맞춤 */
+      }
+      .roster td {
+        /* 모바일에서도 3열이 들어오게 자동 너비 */
+        width: auto;
+        height: clamp(64px, 12vw, 110px);
+        border: 1px solid #e2e8f0;
+        vertical-align: middle;
+        text-align: center;
+        font-size: clamp(14px, 3.6vw, 18px);
+        font-weight: 600;
+        padding: 8px 6px;
+        word-break: keep-all;            /* 한글 줄바꿈 깔끔하게 */
+      }
+
+      /* placeholder */
+      .roster td[contenteditable]:empty:before {
+        content: attr(data-ph);
+        color: #94a3b8;
+        font-weight: 500;
+      }
+
+      .hint {
+        text-align: center;
+        color: #94a3b8;
+        font-size: 12px;
+        margin-top: 6px;
+      }
+
+      /* 더 작은 화면 보정 */
+      @media (max-width: 380px) {
+        table.roster { width: 96vw; }
+        .roster td { font-size: clamp(13px, 3.9vw, 16px); padding: 6px 4px; }
+        .title-top { font-size: clamp(26px, 7vw, 40px); }
+        .title-sub { font-size: clamp(16px, 4.5vw, 24px); }
+      }
+
+      /* 인쇄 최적화 */
+      @media print {
+        body { place-content: start; }
+        .hint { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet" role="main">
+      <div class="title-top">02월 08일</div>
+      <div class="title-sub">선교 카페 명단</div>
+
+      <table class="roster" aria-label="3x3 명단 표">
+        <tbody>
+          <tr>
+            <td contenteditable="true" data-ph="9:00 ~ 10:00"></td>
+            <td contenteditable="true" data-ph=""></td>
+            <td contenteditable="true" data-ph=""></td>
+          </tr>
+          <tr>
+            <td contenteditable="true" data-ph="11:30 ~ 12:30"></td>
+            <td contenteditable="true" data-ph=""></td>
+            <td contenteditable="true" data-ph=""></td>
+          </tr>
+          <tr>
+            <td contenteditable="true" data-ph="12:30 ~ 1:30"></td>
+            <td contenteditable="true" data-ph=""></td>
+            <td contenteditable="true" data-ph=""></td>
+          </tr>
+          <tr>
+            <td contenteditable="true" data-ph="1:30 ~ 2:30"></td>
+            <td contenteditable="true" data-ph=""></td>
+            <td contenteditable="true" data-ph=""></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="hint">늦지않게 노력해주세요~!</div>
+    </main>
+  </body>
+</html>

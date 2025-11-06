@@ -1,0 +1,155 @@
+/* ---------- 기본 ---------- */
+:root {
+  --bg: #ffffff;
+  --fg: #0f172a;
+  --muted: #475569;
+  --line: #e2e8f0;
+  --accent: #4f46e5;
+  --accent-2: #7c3aed;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
+               Apple SD Gothic Neo, 'Noto Sans KR', 'Malgun Gothic', Arial, sans-serif;
+  color: var(--fg);
+  background: var(--bg);
+}
+
+/* 컨테이너 자체 중앙 폭 */
+.container {
+  width: min(1100px, 92%);
+  margin: 0 auto !important;
+}
+
+/* ---------- 헤더 ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--line);
+}
+.site-header .container {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+.title {
+  margin: 22px 0 4px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: clamp(28px, 4vw, 48px);
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.subtitle {
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-size: clamp(14px, 2.1vw, 18px);
+}
+
+/* ---------- 본문: 중앙 고정 ---------- */
+main.container {
+  display: grid !important;
+  justify-items: center !important;   /* 섹션 박스 자체를 가운데 */
+}
+.buttons-section {
+  width: 100%;
+  padding: 28px 0 36px;
+  display: grid !important;
+  justify-items: center !important;   /* 내부 컨텐츠 가운데 */
+  text-align: center !important;
+}
+
+/* 월 섹션 래퍼 */
+#schedule-buttons {
+  width: 100%;
+  max-width: 1100px;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;     /* 자식 섹션들을 중앙 */
+  gap: 28px !important;               /* 섹션 사이 간격 */
+}
+
+/* ---------- 월 그룹 ---------- */
+.month-group {
+  width: 100%;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;     /* 내부도 중앙 */
+  text-align: center !important;
+  gap: 14px !important;
+}
+.month-title {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: clamp(18px, 3.2vw, 22px);
+  color: var(--fg);
+}
+
+/* ---------- 버튼 그리드 ---------- */
+/* 버튼 사이 간격 확실, 줄바꿈 시에도 중앙 유지 */
+.button-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important; /* 가로 중앙 */
+  gap: 18px 18px !important;          /* 버튼 간 간격 */
+  width: 100%;
+}
+
+/* 개별 버튼 */
+.btn-date {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform .05s ease, box-shadow .15s ease, border-color .15s ease;
+  text-align: center;
+  min-width: 160px;                   /* 보기 좋은 최소 폭 */
+}
+.btn-date:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.08);
+  border-color: #c7d2fe;
+}
+.btn-date:focus { outline: none; box-shadow: 0 0 0 3px rgba(79, 70, 229, .25); }
+.btn-date.is-today { border-color: #86efac; box-shadow: inset 0 0 0 1px #86efac; }
+.btn-date.is-last { border-color: #fca5a5; }
+
+/* 래퍼 바로 아래 버튼이 있어도 중앙 보장 */
+#schedule-buttons > .btn-date { align-self: center !important; }
+
+/* ---------- 푸터 ---------- */
+.site-footer {
+  border-top: 1px solid var(--line);
+  padding: 22px 0 28px;
+  color: var(--muted);
+  text-align: center !important;
+}
+.small { font-size: 13px; }
+
+/* ---------- 모바일 ---------- */
+@media (max-width: 480px) {
+  .btn-date {
+    min-width: 140px;
+    padding: 14px 20px;
+    font-size: 15px;
+    border-radius: 14px;
+  }
+}
+
+/* 모션 최소화 */
+@media (prefers-reduced-motion: reduce) { .btn-date { transition: none; } }
