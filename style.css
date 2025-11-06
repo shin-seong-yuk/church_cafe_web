@@ -1,6 +1,6 @@
 /* ---------- 기본 ---------- */
 :root {
-  --bg: #ffffff;
+  --bg: rgb(242, 239, 218);  /* ← 배경색 통일 (#F2EFDA) */
   --fg: #0f172a;
   --muted: #475569;
   --line: #e2e8f0;
@@ -15,7 +15,7 @@ body {
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
                Apple SD Gothic Neo, 'Noto Sans KR', 'Malgun Gothic', Arial, sans-serif;
   color: var(--fg);
-  background: var(--bg);
+  background: var(--bg);        /* ← 여기서 전역 배경 적용 */
 }
 
 /* 컨테이너 자체 중앙 폭 */
@@ -28,7 +28,7 @@ body {
 .site-header {
   position: sticky;
   top: 0;
-  background: rgba(255,255,255,0.92);
+  background: rgba(242, 239, 218, 0.92);  /* ← 배경색 톤 맞춤 */
   backdrop-filter: blur(6px);
   border-bottom: 1px solid var(--line);
 }
@@ -57,13 +57,13 @@ body {
 /* ---------- 본문: 중앙 고정 ---------- */
 main.container {
   display: grid !important;
-  justify-items: center !important;   /* 섹션 박스 자체를 가운데 */
+  justify-items: center !important;
 }
 .buttons-section {
   width: 100%;
   padding: 28px 0 36px;
   display: grid !important;
-  justify-items: center !important;   /* 내부 컨텐츠 가운데 */
+  justify-items: center !important;
   text-align: center !important;
 }
 
@@ -73,8 +73,8 @@ main.container {
   max-width: 1100px;
   display: flex !important;
   flex-direction: column !important;
-  align-items: center !important;     /* 자식 섹션들을 중앙 */
-  gap: 28px !important;               /* 섹션 사이 간격 */
+  align-items: center !important;
+  gap: 28px !important;
 }
 
 /* ---------- 월 그룹 ---------- */
@@ -82,7 +82,7 @@ main.container {
   width: 100%;
   display: flex !important;
   flex-direction: column !important;
-  align-items: center !important;     /* 내부도 중앙 */
+  align-items: center !important;
   text-align: center !important;
   gap: 14px !important;
 }
@@ -95,12 +95,11 @@ main.container {
 }
 
 /* ---------- 버튼 그리드 ---------- */
-/* 버튼 사이 간격 확실, 줄바꿈 시에도 중앙 유지 */
 .button-grid {
   display: flex !important;
   flex-wrap: wrap !important;
-  justify-content: center !important; /* 가로 중앙 */
-  gap: 18px 18px !important;          /* 버튼 간 간격 */
+  justify-content: center !important;
+  gap: 18px 18px !important;  /* 버튼 간 간격 */
   width: 100%;
 }
 
@@ -118,7 +117,7 @@ main.container {
   cursor: pointer;
   transition: transform .05s ease, box-shadow .15s ease, border-color .15s ease;
   text-align: center;
-  min-width: 160px;                   /* 보기 좋은 최소 폭 */
+  min-width: 160px;
 }
 .btn-date:hover {
   transform: translateY(-1px);
