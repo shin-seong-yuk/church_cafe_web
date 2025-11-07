@@ -4,105 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>12월 28일 · 선교 카페 명단</title>
-    <link rel="stylesheet" href="styles.css" />
-    <style>
-      /* 베이지 배경 + 중앙 배치 */
-      * { box-sizing: border-box; }
-      html, body { background: rgb(242,239,218); }
-      body {
-        min-height: 100svh;
-        margin: 0;
-        display: grid;
-        place-content: center;
-      }
-      .sheet { padding: 8px; }
-
-      /* 카드(제목+표+힌트) */
-      .card {
-        background:#fff;
-        border-radius:18px;
-        border:1px solid #e2e8f0;                    
-        box-shadow:
-          0 0 0 2px rgba(0,0,0,0.20),                
-          0 12px 32px rgba(0,0,0,0.08);              
-        width:min(760px, 96vw);
-        margin-inline:auto;
-        padding:20px 18px;
-        overflow:hidden;
-        text-align:center;
-        display:grid;
-        gap:14px;
-      }
-
-      /* 제목(조금 더 진하게 유지) */
-      .title-top {
-        color:#111827;
-        font-weight:800;
-        letter-spacing:-0.02em;
-        font-size:clamp(28px, 5vw, 44px);
-        margin: 6px 0 2px;
-      }
-      .title-sub {
-        color:#334155;
-        font-weight:800;
-        font-size:clamp(18px, 3.5vw, 28px);
-        margin: 0 0 6px;
-      }
-
-      /* ▼▼ 표: 두껍고 검정색 격자선으로 변경 ▼▼ */
-      table.roster {
-        border-collapse: collapse;     /* << 변경: 선을 하나로 합쳐 또렷하게 */
-        width:100%;
-        background:#fff;
-      }
-      .roster td {
-        height: clamp(64px, 12vw, 110px);
-        border: 2.5px solid #000;      /* << 변경: 두껍고 검정색 */
-        vertical-align: middle;
-        text-align: center;
-        color:#111827;
-        font-size:clamp(14px, 3.6vw, 18px);
-        font-weight:700;
-        padding:8px 6px;
-        word-break: keep-all;
-        background:#fff;
-      }
-      .roster tr td:first-child{ font-weight:800; }
-
-      /* 카드 내부 힌트 */
-      .hint{
-        color:#64748b;
-        font-size:12px;
-        margin: 6px 0 0;
-        padding-top:10px;
-        border-top:1px solid #eef2f7;
-      }
-
-      /* 카드 아래 브랜드 문구 */
-      .brand-note{
-        margin-top:10px;
-        text-align:center;
-        font-weight:800;
-        letter-spacing:.18em;
-        color:#1f2937;
-        font-size:12px;
-        opacity:.95;
-      }
-
-      @media (max-width:380px){
-        .card{ width:98vw; padding:16px 12px; border-radius:16px; }
-        .roster td{ font-size:clamp(13px,3.9vw,16px); padding:6px 4px; }
-        .title-top{ font-size:clamp(26px,7vw,40px); }
-        .title-sub{ font-size:clamp(16px,4.5vw,24px); }
-        .brand-note{ font-size:11px; letter-spacing:.16em; }
-      }
-
-      @media print{
-        body{ place-content:start; background:#fff; }
-        .card{ box-shadow:none; border-color:#cbd5e1; }
-        .hint{ display:none; }
-      }
-    </style>
+    <link rel="stylesheet" href="pageStyles.css" />
   </head>
   <body>
     <main class="sheet" role="main">
@@ -113,29 +15,41 @@
         <table class="roster" aria-label="3x3 명단 표">
           <tbody>
             <tr>
+              <td>시간</td>
+              <td>담당자</td>
+              <td>담당자</td>
+              <td>비고</td>
+            </tr>
+            <tr>
               <td>9:00 ~ 10:00</td>
               <td></td>
               <td></td>
+              <td>-</td>
             </tr>
             <tr>
               <td>11:30 ~ 12:30</td>
-              <td></td>
-              <td></td>
+              <td>지은</td>
+              <td>예지</td>
+              <td>지은 12:15까지</td>
             </tr>
             <tr>
               <td>12:30 ~ 1:30</td>
               <td></td>
               <td></td>
+              <td>-</td>
             </tr>
             <tr>
               <td>1:30 ~ 2:30</td>
               <td></td>
               <td></td>
+              <td>-</td>
             </tr>
           </tbody>
         </table>
 
-        <div class="hint">늦지않게 노력해주세요~!</div>
+        <div class="hint">*거스름돈은 시재를 사용해 주세요(1,000원x30개, 5,000원x6개)</div>
+        <div class="hint">*선납과 외상은 노트에 기재 부탁드립니다!</div>
+        <div class="hint">*늦지않게 노력해주세요~!</div>
       </div>
 
       <div class="brand-note">BOKDEUL'S COFFEE</div>
