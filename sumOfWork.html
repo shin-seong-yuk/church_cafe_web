@@ -3,91 +3,112 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>12월 28일 · 선교 카페 명단</title>
+    <title>12월 28일 · 선교 카페 명단 (Responsive)</title>
     <style>
-        
-      /* 베이지 배경 + 중앙 배치 */
+      /* ====== 기본 설정 & 변수 ====== */
       * { box-sizing: border-box; }
-      html, body { background: rgb(242,239,218); }
-      body {
-        min-height: 100svh;
+      :root{
+        /* 열 비율: 이름 30% / 시간 20% 반복 (3:2) */
+        --name-col: 0.25;
+        --time-col: 0.25;
+
+        /* 카드 최대 폭 더 좁게 */
+        --card-max: 720px;
+
+        /* 카드 좌우 바깥 여백(뷰포트에 비례해 넉넉하게) */
+        --page-gutter: clamp(24px, 8vw, 120px);
+      }
+
+      html, body {
+        background: rgb(242,239,218);
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+      }
+      body{
+        min-height: 100vh;
         margin: 0;
         display: grid;
         place-content: center;
+        padding: 12px; /* 아주 작은 화면에서의 완충 여백 */
       }
-      .sheet { padding: 8px; }
+      .sheet{ padding: 8px; }
 
-      /* 카드(제목+표+힌트) */
-      .card {
+      /* ====== 카드(흰 배경) → 유동 폭 ====== */
+      .card{
         background:#fff;
         border-radius:18px;
         border:1px solid #e2e8f0;
         box-shadow:
           0 0 0 2px rgba(0,0,0,0.20),
           0 12px 32px rgba(0,0,0,0.08);
-        /* ▼ 폭/높이 조정 */
-        width:min(600px, 88vw);
-        margin-inline:auto;
-        padding:16px 14px;            /* (20px → 16px / 18px → 14px) */
+        /* 좌우 바깥여백을 양쪽 모두 반영하여 카드 폭 계산 */
+        width: min(var(--card-max), calc(100vw - (var(--page-gutter) * 2)));
+        /* 베이지 배경과의 간격을 더 벌림 */
+        margin: clamp(20px, 6vh, 72px) auto;
+
+        padding:16px 14px;
         overflow:hidden;
         text-align:center;
         display:grid;
         gap:14px;
+        padding-left: 6px;
+        padding-right: 6px;
       }
 
-      /* 제목(조금 더 진하게 유지) */
-      .title-top {
+      /* ====== 타이틀 → 유동 폰트 ====== */
+      .title-top{
         color:#111827;
         font-weight:800;
         letter-spacing:-0.02em;
-        font-size:clamp(28px, 5vw, 44px);
+        font-size: clamp(24px, 4vw, 36px);
         margin: 6px 0 2px;
       }
-      .title-sub {
+      .title-sub{
         color:#334155;
         font-weight:800;
-        font-size:clamp(18px, 3.5vw, 28px);
+        font-size: clamp(16px, 2.5vw, 22px);
         margin: 0 0 6px;
       }
 
-      /* ▼▼ 표: 두껍고 검정색 격자선 + 헤더 배경색 ▼▼ */
-      table.roster {
+      /* ====== 표 → 유동 폭 + 고정 비율 ====== */
+      table.roster{
         border-collapse: collapse;
-        width:100%;
+        width: 100%;
         background:#fff;
+        table-layout: fixed; /* 비율 기반 고정 레이아웃 */
       }
-      .roster td {
-        /* ▼ 높이 살짝 축소 */
-        height: clamp(56px, 10.5vw, 100px); /* (64px → 56px 등) */
+
+      /* colgroup으로 비율 제어 (이름 30% / 시간 20%) */
+      .roster col.name{ width: calc(var(--name-col) * 100%); }
+      .roster col.time{ width: calc(var(--time-col) * 100%); }
+
+      .roster td{
         border: 2.5px solid #000;
         vertical-align: middle;
         text-align: center;
         color:#111827;
-        font-size:clamp(14px, 3.6vw, 18px);
+        font-size: clamp(14px, 1.8vw, 16px);
         font-weight:700;
-        padding:8px 6px;
+        padding:12px 6px;
         word-break: keep-all;
         background:#fff;
       }
       .roster tr td:first-child{ font-weight:800; }
 
-      /* 카드 내부 힌트: 간격 축소 */
       .hint{
         color:#64748b;
         font-size:12px;
-        margin: 4px 0 0;             /* (6px → 4px) */
-        padding-top:6px;              /* (10px → 6px) */
-        border-top:1px solid #eef2f7; /* 첫 줄만 얇은 구분선 */
+        margin: 4px 0 0;
+        padding-top:6px;
+        border-top:1px solid #eef2f7;
         line-height:1.3;
       }
-      /* 두 번째 이후 줄은 구분선/여백 더 줄이기 */
       .hint + .hint{
         border-top:none;
         margin-top:2px;
         padding-top:2px;
       }
 
-      /* 카드 아래 브랜드 문구 */
       .brand-note{
         margin-top:10px;
         text-align:center;
@@ -98,20 +119,21 @@
         opacity:.95;
       }
 
-      @media (max-width:380px){
-        .card{ width:98vw; padding:14px 12px; border-radius:16px; }
-        .roster td{ font-size:clamp(13px,3.9vw,16px); padding:6px 4px; height: clamp(50px, 12vw, 92px); }
-        .title-top{ font-size:clamp(26px,7vw,40px); }
-        .title-sub{ font-size:clamp(16px,4.5vw,24px); }
-        .brand-note{ font-size:11px; letter-spacing:.16em; }
-      }
+      /* 매우 좁은 화면에서 넘침 방지: 표는 카드 폭 안에서 비율 유지 */
+      .card{ overflow-x: auto; }
 
+      /* 인쇄 */
       @media print{
         body{ place-content:start; background:#fff; }
-        .card{ box-shadow:none; border-color:#cbd5e1; }
+        .card{
+          box-shadow:none;
+          border-color:#cbd5e1;
+          width: 100%;
+          max-width: none;
+          margin: 0 auto; /* 인쇄 시 여백 제거 */
+        }
         .hint{ display:none; }
       }
-
     </style>
   </head>
   <body>
@@ -120,7 +142,11 @@
         <div class="title-top">BOKDEUL'S COFFEE</div>
         <div class="title-sub">총 시간 확인하기</div>
 
+        <!-- 고정 비율 유지를 위한 colgroup (이름 30% / 시간 20% 반복) -->
         <table class="roster" aria-label="3x3 명단 표">
+          <colgroup>
+            <col class="name"><col class="time"><col class="name"><col class="time">
+          </colgroup>
           <tbody>
             <tr>
               <td>고희경</td>
