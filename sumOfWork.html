@@ -3,19 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>12월 28일 · 선교 카페 명단 (Responsive)</title>
+    <title>총 근무 시간 · BOKDEUL'S COFFEE</title>
     <style>
       /* ====== 기본 설정 & 변수 ====== */
       * { box-sizing: border-box; }
       :root{
-        /* 열 비율: 이름 30% / 시간 20% 반복 (3:2) */
         --name-col: 0.25;
         --time-col: 0.25;
-
-        /* 카드 최대 폭 더 좁게 */
         --card-max: 720px;
-
-        /* 카드 좌우 바깥 여백(뷰포트에 비례해 넉넉하게) */
         --page-gutter: clamp(24px, 8vw, 120px);
       }
 
@@ -29,11 +24,10 @@
         margin: 0;
         display: grid;
         place-content: center;
-        padding: 12px; /* 아주 작은 화면에서의 완충 여백 */
+        padding: 12px;
       }
       .sheet{ padding: 8px; }
 
-      /* ====== 카드(흰 배경) → 유동 폭 ====== */
       .card{
         background:#fff;
         border-radius:18px;
@@ -41,11 +35,8 @@
         box-shadow:
           0 0 0 2px rgba(0,0,0,0.20),
           0 12px 32px rgba(0,0,0,0.08);
-        /* 좌우 바깥여백을 양쪽 모두 반영하여 카드 폭 계산 */
         width: min(var(--card-max), calc(100vw - (var(--page-gutter) * 2)));
-        /* 베이지 배경과의 간격을 더 벌림 */
         margin: clamp(20px, 6vh, 72px) auto;
-
         padding:16px 14px;
         overflow:hidden;
         text-align:center;
@@ -55,7 +46,6 @@
         padding-right: 6px;
       }
 
-      /* ====== 타이틀 → 유동 폰트 ====== */
       .title-top{
         color:#111827;
         font-weight:800;
@@ -70,15 +60,12 @@
         margin: 0 0 6px;
       }
 
-      /* ====== 표 → 유동 폭 + 고정 비율 ====== */
       table.roster{
         border-collapse: collapse;
         width: 100%;
         background:#fff;
-        table-layout: fixed; /* 비율 기반 고정 레이아웃 */
+        table-layout: fixed;
       }
-
-      /* colgroup으로 비율 제어 (이름 30% / 시간 20%) */
       .roster col.name{ width: calc(var(--name-col) * 100%); }
       .roster col.time{ width: calc(var(--time-col) * 100%); }
 
@@ -95,20 +82,6 @@
       }
       .roster tr td:first-child{ font-weight:800; }
 
-      .hint{
-        color:#64748b;
-        font-size:12px;
-        margin: 4px 0 0;
-        padding-top:6px;
-        border-top:1px solid #eef2f7;
-        line-height:1.3;
-      }
-      .hint + .hint{
-        border-top:none;
-        margin-top:2px;
-        padding-top:2px;
-      }
-
       .brand-note{
         margin-top:10px;
         text-align:center;
@@ -119,10 +92,8 @@
         opacity:.95;
       }
 
-      /* 매우 좁은 화면에서 넘침 방지: 표는 카드 폭 안에서 비율 유지 */
       .card{ overflow-x: auto; }
 
-      /* 인쇄 */
       @media print{
         body{ place-content:start; background:#fff; }
         .card{
@@ -130,9 +101,8 @@
           border-color:#cbd5e1;
           width: 100%;
           max-width: none;
-          margin: 0 auto; /* 인쇄 시 여백 제거 */
+          margin: 0 auto;
         }
-        .hint{ display:none; }
       }
     </style>
   </head>
@@ -142,53 +112,140 @@
         <div class="title-top">BOKDEUL'S COFFEE</div>
         <div class="title-sub">총 시간 확인하기</div>
 
-        <!-- 고정 비율 유지를 위한 colgroup (이름 30% / 시간 20% 반복) -->
-        <table class="roster" aria-label="3x3 명단 표">
+        <table class="roster" aria-label="총 근무 시간 표">
           <colgroup>
             <col class="name"><col class="time"><col class="name"><col class="time">
           </colgroup>
-          <tbody>
-            <tr>
-              <td>고희경</td>
-              <td>1h</td>
-              <td>김예원</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>김예은</td>
-              <td>-</td>
-              <td>김예지</td>
-              <td>1h</td>
-            </tr>
-            <tr>
-              <td>박지원</td>
-              <td>1.5h</td>
-              <td>박태웅</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>신성욱</td>
-              <td>1h</td>
-              <td>이지은</td>
-              <td>45m</td>
-            </tr>
-            <tr>
-              <td>이창원</td>
-              <td>1h</td>
-              <td>장준영</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>하우현</td>
-              <td>1h</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-          </tbody>
+          <!-- ✅ 여기! tbody 안을 비워두고 id만 붙임 -->
+          <tbody id="summary-body"></tbody>
         </table>
       </div>
 
       <div class="brand-note">BOKDEUL'S COFFEE</div>
     </main>
+
+    <script>
+      // ===== 1) 전체 이름 목록 =====
+      const ALL_NAMES = [
+        "고희경",
+        "김예원",
+        "김예은",
+        "김예지",
+        "박지원",
+        "박태웅",
+        "신성욱",
+        "이지은",
+        "이창원",
+        "장준영",
+        "하우현"
+      ];
+
+      // ===== 2) 날짜별 근무 기록(localStorage에서 불러오기) =====
+const STORAGE_KEY = "bokdeul-work-log-v1";
+
+//  localStorage 구조:
+//  {
+//    "2024-11-30": { "박지원": 60, "박태웅": 60, ... },
+//    "2024-12-07": { ... },
+//    ...
+//  }
+function loadWorkLogFromStorage(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+
+    const data = JSON.parse(raw);
+    const list = [];
+
+    for (const [date, perName] of Object.entries(data)) {
+      for (const [name, minutes] of Object.entries(perName)) {
+        list.push({ date, name, minutes });
+      }
+    }
+    return list;
+  }catch(e){
+    console.error("근무 기록 불러오기 실패:", e);
+    return [];
+  }
+}
+
+const WORK_LOG = loadWorkLogFromStorage();
+
+// 필요하면 여기에 수동으로 추가도 가능 (예외 케이스 보정용)
+// WORK_LOG.push({ date: "2024-12-28", name: "이지은", minutes: 45 });
+
+
+      // ===== 유틸 =====
+      function startOfDay(date){
+        const d = new Date(date);
+        d.setHours(0,0,0,0);
+        return d;
+      }
+      function parseYMD(ymd){
+        const [y,m,d] = ymd.split("-").map(Number);
+        return new Date(y, m-1, d);
+      }
+      function formatMinutes(min){
+        if (!min) return "-";
+        const h = Math.floor(min / 60);
+        const m = min % 60;
+        const parts = [];
+        if (h > 0) parts.push(`${h}h`);
+        if (m > 0) parts.push(`${m}m`);
+        return parts.join(" ");
+      }
+
+      // ===== 합산 & 렌더 =====
+      (function buildSummary(){
+        const today = startOfDay(new Date());
+
+        // name → totalMinutes
+        const totals = new Map();
+        ALL_NAMES.forEach(name => totals.set(name, 0));
+
+        WORK_LOG.forEach(entry => {
+          const workDate = startOfDay(parseYMD(entry.date));
+          if (workDate > today) return; // 아직 안 지난 날짜는 합산 X
+
+          if (!totals.has(entry.name)) totals.set(entry.name, 0);
+          const prev = totals.get(entry.name) || 0;
+          totals.set(entry.name, prev + entry.minutes);
+        });
+
+        const entries = Array.from(totals.entries())
+          .sort((a,b) => a[0].localeCompare(b[0], "ko"));
+
+        const tbody = document.getElementById("summary-body");
+        if (!tbody) return;
+        tbody.innerHTML = "";
+
+        // 2명씩 한 행
+        for (let i = 0; i < entries.length; i += 2){
+          const tr = document.createElement("tr");
+
+          const [name1, min1] = entries[i];
+          const pair = entries[i+1];
+          const name2 = pair ? pair[0] : "-";
+          const min2  = pair ? pair[1] : 0;
+
+          const tdName1 = document.createElement("td");
+          tdName1.textContent = name1;
+          const tdTime1 = document.createElement("td");
+          tdTime1.textContent = formatMinutes(min1);
+
+          const tdName2 = document.createElement("td");
+          tdName2.textContent = name2;
+          const tdTime2 = document.createElement("td");
+          tdTime2.textContent = name2 === "-" ? "-" : formatMinutes(min2);
+
+          tr.appendChild(tdName1);
+          tr.appendChild(tdTime1);
+          tr.appendChild(tdName2);
+          tr.appendChild(tdTime2);
+
+          tbody.appendChild(tr);
+        }
+      })();
+    </script>
   </body>
 </html>

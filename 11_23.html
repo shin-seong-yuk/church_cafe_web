@@ -6,7 +6,7 @@
     <title>11월 23일 · 선교 카페 명단</title>
     <link rel="stylesheet" href="pageStyles.css" />
   </head>
-  <body>
+
     <main class="sheet" role="main">
       <div class="card">
         <div class="title-top">11월 23일</div>
@@ -60,5 +60,112 @@
 
       <div class="brand-note">BOKDEUL'S COFFEE</div>
     </main>
+    <script>
+    (function(){
+      // 이 페이지 날짜
+      const DATE = "2024-11-23";
+
+      // 브라우저에 저장할 key
+      const STORAGE_KEY = "bokdeul-work-log-v1";
+
+      // 근무표에서 쓰는 이름 -> 총합 페이지에 쓰는 전체 이름 매핑
+      const NAME_MAP = {
+        "지원": "박지원",
+        "태웅": "박태웅",
+        "지은": "이지은",
+        "예지": "김예지",
+        "희경": "고희경",
+        "성욱": "신성욱",
+        "은택": "김은택",
+        "우현": "하우현",
+        "창원": "이창원",
+        "예은": "김예은",
+        "준영": "장준영",
+        "예원": "김예원",
+        // 필요하면 더 추가
+      };
+
+      function toMinutes(str){
+        if (!str) return 0;
+        const [h, m] = str.split(":").map(Number);
+        return (h * 60) + (m || 0);
+      }
+
+      // "9:00 ~ 10:00" → { start: 540, end: 600 }
+      function parseRange(text){
+        const [s, e] = text.split("~").map(t => t.trim());
+        return {
+          start: toMinutes(s),
+          end: toMinutes(e)
+        };
+      }
+
+      function addMinutes(map, fullName, minutes){
+        if (!fullName || !minutes) return;
+        if (!map[fullName]) map[fullName] = 0;
+        map[fullName] += minutes;
+      }
+
+      const tbody = document.querySelector(".roster tbody");
+      if (!tbody) return;
+
+      // 첫 번째 줄(헤더: "시간 / 담당자 / 담당자 / 비고")은 건너뜀
+      const rows = Array.from(tbody.rows).slice(1);
+      const dayTotals = {};
+
+      rows.forEach(row => {
+        const cells = row.cells;
+        if (cells.length < 4) return;
+
+        const timeText = cells[0].textContent.trim();
+        if (!timeText || timeText === "시간") return;
+
+        const { start, end } = parseRange(timeText);
+        const baseMinutes = end - start;
+        if (baseMinutes <= 0) return;
+
+        const name1Raw = cells[1].textContent.trim();
+        const name2Raw = cells[2].textContent.trim();
+        // const noteText = cells[3].textContent.trim(); // 지금은 안 씀
+
+        // 👉 한 칸에 "희경 , 예은" 이런 식으로 여러 명 들어있는 경우도 처리
+        function handlePersonCell(cellText){
+          if (!cellText) return;
+
+          // "희경 , 예은" → ["희경", "예은"]
+          const names = cellText
+            .split(",")
+            .map(n => n.trim())
+            .filter(n => n && n !== "-");
+
+          names.forEach(nameRaw => {
+            // 줄임말 → 전체 이름, 없으면 그대로 사용
+            const full = NAME_MAP[nameRaw] || nameRaw;
+
+            // 🔥 더 이상 '지은 12:15까지' 같은 건 무시하고,
+            // 항상 해당 시간 전체(baseMinutes)를 더해줌
+            const minutes = baseMinutes;
+
+            addMinutes(dayTotals, full, minutes);
+          });
+        }
+
+        handlePersonCell(name1Raw);
+        handlePersonCell(name2Raw);
+      });
+
+      // 날짜별로 덮어쓰는 방식이라, 같은 페이지 여러 번 열어도 중복 합산 X
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const all = raw ? JSON.parse(raw) : {};
+        all[DATE] = dayTotals;  // 예: { "박지원": 60, "박태웅": 60, ... }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+        console.log("근무 기록 저장:", DATE, dayTotals);
+      } catch (e) {
+        console.error("근무 기록 저장 실패:", e);
+      }
+    })();
+  </script>
+
   </body>
 </html>

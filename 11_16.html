@@ -54,5 +54,121 @@
 
       <div class="brand-note">BOKDEUL'S COFFEE</div>
     </main>
+        <!-- 👇 이 스크립트를 </body> 바로 위에 추가 -->
+    <script>
+      (function(){
+        // 이 페이지 날짜 (YYYY-MM-DD 형식으로만 바꿔주면 됨)
+        const DATE = "2024-11-16";
+
+        // 브라우저에 저장할 key
+        const STORAGE_KEY = "bokdeul-work-log-v1";
+
+        // 근무표에서 쓰는 이름 -> 총합 페이지에 쓰는 전체 이름 매핑
+        const NAME_MAP = {
+          "지원": "박지원",
+          "태웅": "박태웅",
+          "지은": "이지은",
+          "예지": "김예지",
+          "희경": "고희경",
+          "성욱": "신성욱",
+          "은택": "김은택",
+          "우현": "하우현",
+          "창원": "이창원",
+          "예원": "김예원",
+          "예은": "김예은",
+          "준영": "장준영",
+
+          // 필요하면 여기 계속 추가
+        };
+
+        function toMinutes(str){
+          if (!str) return 0;
+          const [h, m] = str.split(":").map(Number);
+          return (h * 60) + (m || 0);
+        }
+
+        // "9:00 ~ 10:00" → { start: 540, end: 600 }
+        function parseRange(text){
+          const [s, e] = text.split("~").map(t => t.trim());
+          return {
+            start: toMinutes(s),
+            end: toMinutes(e)
+          };
+        }
+
+        // 비고에서 "지은 12:15 까지" 같은 패턴 찾아서 끝나는 시간 기록
+        function findEndOverride(name, noteText){
+          if (!name || !noteText) return null;
+          const re = new RegExp(name + "\\s*(\\d{1,2}:\\d{2})\\s*까지");
+          const m = noteText.match(re);
+          if (!m) return null;
+          return toMinutes(m[1]);
+        }
+
+        function addMinutes(map, fullName, minutes){
+          if (!fullName || !minutes) return;
+          if (!map[fullName]) map[fullName] = 0;
+          map[fullName] += minutes;
+        }
+
+        const tbody = document.querySelector(".roster tbody");
+        if (!tbody) return;
+
+        // 첫 번째 줄(헤더: "시간 / 담당자 / 담당자 / 비고")은 건너뜀
+        const rows = Array.from(tbody.rows).slice(1);
+        const dayTotals = {};
+
+        rows.forEach(row => {
+          const cells = row.cells;
+          if (cells.length < 4) return;
+
+          const timeText = cells[0].textContent.trim();
+          if (!timeText || timeText === "시간") return;
+
+          const { start, end } = parseRange(timeText);
+          const baseMinutes = end - start;
+          if (baseMinutes <= 0) return;
+
+          const name1Raw = cells[1].textContent.trim();
+          const name2Raw = cells[2].textContent.trim();
+          const noteText = cells[3].textContent.trim();
+
+          function handlePerson(nameRaw){
+            if (!nameRaw || nameRaw === "-") return;
+
+            // 줄임말 → 전체 이름, 없으면 그대로 사용
+            const full = NAME_MAP[nameRaw] || nameRaw;
+
+            // "지은 12:15 까지" / "이지은 12:15 까지" 둘 다 인식 시도
+            let endOverride =
+              findEndOverride(nameRaw, noteText) ||
+              findEndOverride(full, noteText);
+
+            let minutes;
+            if (endOverride && endOverride > start && endOverride <= end) {
+              minutes = endOverride - start;
+            } else {
+              minutes = baseMinutes;
+            }
+
+            addMinutes(dayTotals, full, minutes);
+          }
+
+          handlePerson(name1Raw);
+          handlePerson(name2Raw);
+        });
+
+        // 날짜별로 덮어쓰는 방식이라, 같은 페이지 여러 번 열어도 중복 합산 X
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          const all = raw ? JSON.parse(raw) : {};
+          all[DATE] = dayTotals;  // 예: { "박지원": 60, "박태웅": 60, ... }
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+          console.log("근무 기록 저장:", DATE, dayTotals);
+        } catch (e) {
+          console.error("근무 기록 저장 실패:", e);
+        }
+      })();
+    </script>
   </body>
 </html>
